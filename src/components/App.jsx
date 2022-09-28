@@ -3,25 +3,36 @@ import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { getImageCollection } from 'utils/getImageCollection';
 import { INITIAL_STATE } from 'constants/initialState';
+import { Modal } from './Modal/Modal';
+import { Grid } from 'react-loader-spinner';
 
 export class App extends Component {
   state = {
     imageRequest: '',
     imageGallery: [],
     isLoad: false,
+    isModalShow: false,
     pageNumber: 1,
     maxPageNumber: null,
+    modalImage: {},
   };
 
   onSubmit = value => {
     this.setState({ ...INITIAL_STATE, imageRequest: value });
   };
 
-  onClick = async () => {
+  loadMore = async () => {
     const { imageRequest, pageNumber, maxPageNumber } = this.state;
     if (pageNumber <= maxPageNumber) {
       await this.imagesCollectionHandler(imageRequest, pageNumber);
     }
+  };
+
+  toggleModal = () => {
+    this.setState(prevState => ({
+      isModalShow: !prevState.isModalShow,
+      modalImage: {},
+    }));
   };
 
   imagesCollectionHandler = async (imageRequest, pageNumber) => {
@@ -43,6 +54,13 @@ export class App extends Component {
     }
   };
 
+  onImageClickHandler = id => {
+    this.toggleModal();
+    const { imageGallery } = this.state;
+    const { largeImageURL, tags } = imageGallery.find(item => id === item.id);
+    this.setState({ modalImage: { src: largeImageURL, alt: tags } });
+  };
+
   async componentDidUpdate(_, prevState) {
     const { imageRequest, pageNumber } = this.state;
     if (prevState.imageRequest !== imageRequest) {
@@ -55,15 +73,41 @@ export class App extends Component {
   }
 
   render() {
-    const { imageGallery, isLoad, maxPageNumber, pageNumber } = this.state;
+    const {
+      imageGallery,
+      isLoad,
+      maxPageNumber,
+      pageNumber,
+      isModalShow,
+      modalImage,
+    } = this.state;
     return (
       <>
+        {isModalShow && (
+          <Modal onClose={this.toggleModal}>
+            <img src={modalImage.src} alt={modalImage.alt} />
+          </Modal>
+        )}
         <Searchbar onSubmit={this.onSubmit} />
-        {isLoad && 'LOADING...>>>...'}
+        {isLoad && (
+          <Modal>
+            <Grid
+              height="80"
+              width="80"
+              color="#3f51b5"
+              ariaLabel="grid-loading"
+              radius="12.5"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </Modal>
+        )}
         {imageGallery.length > 0 && (
           <ImageGallery
             gallery={imageGallery}
-            onClick={this.onClick}
+            loadMore={this.loadMore}
+            onImageClick={this.onImageClickHandler}
             disableLoadMoreBtn={pageNumber > maxPageNumber}
           />
         )}

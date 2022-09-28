@@ -2,22 +2,35 @@ import PropTypes from 'prop-types';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Button } from 'components/Button/Button';
 
-export const ImageGallery = ({ gallery, onClick, disableLoadMoreBtn }) => {
+export const ImageGallery = ({
+  gallery,
+  loadMore,
+  disableLoadMoreBtn,
+  onImageClick,
+}) => {
   return (
     <>
       <ul className="ImageGallery">
         {gallery.map(item => (
-          <ImageGalleryItem key={item.id} imageItem={item} />
+          <ImageGalleryItem
+            key={item.id}
+            imageItem={item}
+            onClick={onImageClick}
+          />
         ))}
       </ul>
       {!disableLoadMoreBtn && (
-        <Button type={'button'} label={'Load more...'} loadMore={onClick} />
+        <Button type={'button'} label={'Load more...'} onClick={loadMore} />
       )}
     </>
   );
 };
 
-ImageGallery.defaultProps = { onClick: () => {}, disableLoadMoreBtn: true };
+ImageGallery.defaultProps = {
+  loadMore: () => {},
+  onImageClick: () => {},
+  disableLoadMoreBtn: true,
+};
 
 ImageGallery.propTypes = {
   gallery: PropTypes.arrayOf(
@@ -28,6 +41,7 @@ ImageGallery.propTypes = {
       largeImageURL: PropTypes.string,
     })
   ).isRequired,
-  onClick: PropTypes.func,
+  loadMore: PropTypes.func,
+  onImageClick: PropTypes.func,
   disableLoadMoreBtn: PropTypes.bool,
 };
