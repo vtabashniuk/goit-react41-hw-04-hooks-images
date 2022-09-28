@@ -10,12 +10,12 @@ export const Searchbar = ({ onSubmit }) => {
   return (
     <header className="Searchbar">
       <Formik initialValues={{ query: '' }} onSubmit={handleSubmit}>
-        <Form autoComplete="off" className="Form">
-          <button type="submit" className="Button">
-            <span className="Button-label">Search</span>
+        <Form autoComplete="off" className="SearchForm">
+          <button type="submit" className="SearchForm-button">
+            <span className="SearchForm-button-label">Search</span>
           </button>
           <Field
-            className="Input"
+            className="SearchForm-input"
             type="text"
             autoFocus
             autoComplete="off"

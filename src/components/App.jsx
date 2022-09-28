@@ -81,6 +81,7 @@ export class App extends Component {
       isModalShow,
       modalImage,
     } = this.state;
+
     return (
       <>
         {isModalShow && (

@@ -4,7 +4,7 @@ export const ImageGalleryItem = ({ imageItem, onClick }) => {
   const { id, tags, webformatURL } = imageItem;
   return (
     <li className="ImageGalleryItem" onClick={() => onClick(id)}>
-      <img src={webformatURL} alt={tags} />
+      <img className='ImageGalleryItem-image' src={webformatURL} alt={tags} />
     </li>
   );
 };
